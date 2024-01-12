@@ -4,13 +4,28 @@ Sub is a model for setting up shell programs that use subcommands, like `git` or
 
 A sub program is run at the command line using this style:
 
-    $ [name of program] [subcommand] [(args)]
+    $ <the-cmd> [subcommand] [(args)]
 
 Here's some quick examples:
 
-    $ rbenv                    # prints out usage and subcommands
-    $ rbenv versions           # runs the "versions" subcommand
-    $ rbenv shell 1.9.3-p194   # runs the "shell" subcommand, passing "1.9.3-p194" as an argument
+    $ mycmd1                       # prints out usage and subcommands
+    $ mycmd1 version               # runs the "versions" subcommand
+    $ mycmd1 checkout 1.9.3-p194   # runs the "shell" subcommand, passing "1.9.3-p194" as an argument
+
+## QuickStart
+
+1. The original `sub` is a command template, we can create our cmd-subcmd group from this template like:
+
+```sh
+    # Assume create a cmd group `mycmd1`
+    $ cp -fr sub sub-mycmd1     ### The new dir name is up to you
+    $ cd sub-mycmd1
+    $ ./prepare.sh mycmd1       ### MUST assign the new name `mycmd1`
+    #    rm -fr .git
+    $ ./bin/mycmd1 init         ### Add to PATH depend on the real shell env
+```
+
+## Subcommands
 
 Each subcommand maps to a separate, standalone executable program. Sub programs are laid out like so:
 
@@ -20,14 +35,12 @@ Each subcommand maps to a separate, standalone executable program. Sub programs 
     ├── libexec           # where the subcommand executables are
     └── share             # static data storage
 
-## Subcommands
-
 Each subcommand executable does not necessarily need to be in bash. It can be any program, shell script, or even a symlink. It just needs to run.
 
-Here's an example of adding a new subcommand. Let's say your sub is named `rush`. Run:
+Here's an example of `adding a new subcommand`. Let's say your sub is named `mycmd1`. Run:
 
-    touch libexec/rush-who
-    chmod a+x libexec/rush-who
+    touch libexec/mycmd1-who
+    chmod a+x libexec/mycmd1-who
 
 Now open up your editor, and dump in:
 
@@ -38,9 +51,9 @@ set -e
 who
 ```
 
-Of course, this is a simple example... but now `rush who` should work!
+Of course, this is a simple example... but now `mycmd1 who` should work!
 
-    $ rush who
+    $ mycmd1 who
     qrush     console  Sep 14 17:15 
 
 You can run *any* executable in the `libexec` directly, as long as it follows the `NAME-SUBCOMMAND` convention. Try out a Ruby script or your favorite language!
@@ -55,7 +68,9 @@ You get a few commands that come with your sub:
 * `init`: Shows how to load your sub with autocompletions, based on your shell.
 * `shell`: Helps with calling subcommands that might be named the same as builtin/executables.
 
-If you ever need to reference files inside of your sub's installation, say to access a file in the `share` directory, your sub exposes the directory path in the environment, based on your sub name. For a sub named `rush`, the variable name will be `_RUSH_ROOT`.
+If you ever need to reference files inside of your sub's installation, say to access a file in
+the `share` directory, your sub exposes the directory path in the environment, based on your
+sub name. For a sub named `mycmd1`, the variable name will be `_MYCMD1_ROOT`.
 
 Here's an example subcommand you could drop into your `libexec` directory to show this in action: (make sure to correct the name!)
 
@@ -72,7 +87,7 @@ You can also use this environment variable to call other commands inside of your
 
 Each subcommand can opt into self-documentation, which allows the subcommand to provide information when `sub` and `sub help [SUBCOMMAND]` is run.
 
-This is all done by adding a few magic comments. Here's an example from `rush who` (also see `sub commands` for another example):
+This is all done by adding a few magic comments. Here's an example from `mycmd1 who` (also see `sub commands` for another example):
 
 ``` bash
 #!/usr/bin/env bash
@@ -146,12 +161,12 @@ Run the `init` subcommand after you've prepared your sub to get your sub loading
 
 Creating shortcuts for commands is easy, just symlink the shorter version you'd like to run inside of your `libexec` directory.
 
-Let's say we want to shorten up our `rush who` to `rush w`. Just make a symlink!
+Let's say we want to shorten up our `mycmd1 who` to `mycmd1 w`. Just make a symlink!
 
     cd libexec
-    ln -s rush-who rush-w
+    ln -s mycmd1-who mycmd1-w
 
-Now, `rush w` should run `libexec/rush-who`, and save you mere milliseconds of typing every day!
+Now, `mycmd1 w` should run `libexec/mycmd1-who`, and save you mere milliseconds of typing every day!
 
 ## Prepare your sub
 
