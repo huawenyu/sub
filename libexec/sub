@@ -20,8 +20,15 @@ abs_dirname() {
 }
 
 libexec_path="$(abs_dirname "$0")"
-export _SUB_ROOT="$(abs_dirname "$libexec_path")"
-export PATH="${libexec_path}:$PATH"
+#export _ME_ROOT="$(abs_dirname "$libexec_path")"
+apath="$(abs_dirname "$libexec_path")" && \
+    [ -d "$apath" ]  && [[ ":$_ME_ROOT:" != *":$apath:"* ]] && \
+    { export _ME_ROOT=".:$apath:$_ME_ROOT"; }
+
+#export PATH="${libexec_path}:$PATH"
+apath="${libexec_path}:$PATH" && \
+    [ -d "$apath" ]  && [[ ":$PATH:" != *":$apath:"* ]] && \
+    { export PATH=".:$apath:$PATH"; }
 
 command="$1"
 case "$command" in

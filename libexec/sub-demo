@@ -1,0 +1,116 @@
+#!/usr/bin/env bash
+# Usage: sub demo
+# Summary: Check who's logged in
+# Help: This will print out when you run `sub help demo`.
+# You can have multiple lines even!
+#
+#    Show off an example indented
+#
+# And maybe start off another one?
+set -Eeuo pipefail
+
+# Provide sub completions
+if [ "$1" = "--complete" ]; then
+  echo --path
+  echo --name
+  echo --test
+  exit
+fi
+
+
+script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
+
+# Handle option {{{1}}}
+function parser_definition() {
+  setup   REST help:usage -- "Usage: demo [options] [-a ACTION] [-m MESSAGE] ..." ''
+
+  msg -- 'Options:'
+  flag  var_VERBOSE    -v --verbose  counter:true init:=0    -- "e.g. -vvv is verbose level 3"
+  flag  var_DEBUG      -n --dryrun                           -- "Debug mode and list all local variable"
+  param var_ACTION     -a --action   init:="switch"  pattern:"switch | new | pull | push | delete"     -- "Action: *switch|new|pull|push|delete"
+  param var_Message    -m --message                          -- "The review/push commit message"
+
+  disp  VERSION        --version
+  disp  :usage         -h --help    -- "Help message"
+}
+
+eval "$(getoptions parser_definition) exit 1"
+var_RestArg="$@" # rest arguments
+
+
+#
+# script logic here
+#
+my_script () {
+    echo "my script here"
+}
+
+
+main () {
+    local opt
+    local OPTS_SPEC="\
+$0 [<options>] [<path>]
+
+$0 shows information about a Git repository.
+--
+h,help     show the help
+"
+    case "$#" in
+        2)
+            if [ -z "$var_branchName" ]; then
+                var_branchName="$1"
+            fi
+
+            if [ -z "$var_branchDir" ]; then
+                var_branchDir="$2"
+            fi
+            ;;
+        1)
+            if [ -z "$var_branchName" ]; then
+                var_branchName="$1"
+            fi
+            ;;
+        0)
+            ;;
+        *)
+            if [[ -z "$var_DEBUG" ]]; then
+                die "Too many arguments"
+            fi
+            ;;
+    esac
+
+
+    if [[ -n "$var_DEBUG" ]]; then
+        ( set -o posix ; set ) | grep -e '^var_'
+        exit 1
+    fi
+
+    my_script "$@"
+}
+
+
+cleanup() {
+    trap - SIGINT SIGTERM ERR EXIT
+    # script cleanup here
+}
+
+msg() {
+    echo >&2 -e "${1-}"
+}
+
+doit () {
+    >&2 echo "    DO: $*"
+    eval "$@"
+}
+
+die() {
+    local msg=$1
+    local code=${2-1} # default exit status 1
+    msg "$msg"
+    exit "$code"
+}
+
+
+trap cleanup SIGINT SIGTERM ERR EXIT
+main "$@"
+

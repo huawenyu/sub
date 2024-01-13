@@ -1,6 +1,9 @@
 # sub: a delicious way to organize programs
 
-Sub is a model for setting up shell programs that use subcommands, like `git` or `rbenv` using bash. Making a sub does not require you to write shell scripts in bash, you can write subcommands in any scripting language you prefer.
+Sub is a model for setting up shell programs that use subcommands, like `git` or `rbenv`
+using bash. Making a sub does not require you to write shell scripts in bash, you can write
+subcommands in any scripting language you prefer.
+Seems [basher](https://github.com/basherpm/basher) has the same layout, and can be consider a example of `sub`.
 
 A sub program is run at the command line using this style:
 
@@ -14,7 +17,8 @@ Here's some quick examples:
 
 ## QuickStart
 
-1. The original `sub` is a command template, we can create our cmd-subcmd group from this template like:
+The original `sub` is a command template, before your `cp`, please don't work on the original `sub` directly,
+we can create our cmd-subcmd group from this template like:
 
 ```sh
     # Assume create a cmd group `mycmd1`
@@ -57,6 +61,10 @@ Of course, this is a simple example... but now `mycmd1 who` should work!
     qrush     console  Sep 14 17:15 
 
 You can run *any* executable in the `libexec` directly, as long as it follows the `NAME-SUBCOMMAND` convention. Try out a Ruby script or your favorite language!
+
+## Improved autocompletion by [compleat](https://github.com/mbrubeck/compleat)
+
+
 
 ## What's on your sub
 
