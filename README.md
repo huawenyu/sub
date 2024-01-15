@@ -35,9 +35,14 @@ Each subcommand maps to a separate, standalone executable program. Sub programs 
 
     .
     ├── bin               # contains the main executable for your program
+        -compleat         # https://github.com/mbrubeck/compleat
+        -getoptions       # https://github.com/ko1nksm/getoptions
     ├── completions       # (optional) bash/zsh completions
     ├── libexec           # where the subcommand executables are
     └── share             # static data storage
+        -lib
+        ---bashful        # https://github.com/jmcantrell/bashful
+        ---bsda2          # https://github.com/lonkamikaze/bsda2/blob/master/ref/type.md
 
 Each subcommand executable does not necessarily need to be in bash. It can be any program, shell script, or even a symlink. It just needs to run.
 
@@ -64,7 +69,14 @@ You can run *any* executable in the `libexec` directly, as long as it follows th
 
 ## Improved autocompletion by [compleat](https://github.com/mbrubeck/compleat)
 
-
+```sh
+    ### --Auto completions:
+      sudo ln -s $PWD/autolib/application/compleat /usr/local/bin/compleat
+      echo '"\\t": menu-complete' >> ~/.inputrc
+      echo '"\\e[Z": menu-complete-backward' >> ~/.inputrc
+      ln -s $PWD/vol/conf/compleat.d/ ~/.compleat.d
+      echo "source $PWD/vol/conf/compleat_setup" >> $SHELLRC
+```
 
 ## What's on your sub
 
