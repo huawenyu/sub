@@ -53,6 +53,8 @@ https://unix.stackexchange.com/questions/254367/in-bash-scripting-whats-the-diff
   ### This is multiline comments
 : '
 >>> {fileout} foo bar
+The 2nd line.
+The 3rd line.
 '
 
   #arguments from command line and number of arguments
@@ -188,7 +190,34 @@ fi
 
 ```
 
+# string
 
+## split
+
+```sh
+# https://stackoverflow.com/questions/918886/how-do-i-split-a-string-on-a-delimiter-in-bash
+IN="/home/test/testcase/dev/v100/0030-non-vdom/0030-policy/000100-L7/setup.case"
+arrIN=(${IN//\// })
+echo ${arrIN[@]}
+```
+
+## split
+
+```sh
+prefix="hello"
+string="hello-world"
+foo=${string#"$prefix"}
+echo $foo
+```
+
+## Shell Parameter Expansion
+
+[doc](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html)
+```sh
+var=123
+echo ${var:+var is set and not null}
+echo $var
+```
 
 # readfile
 
